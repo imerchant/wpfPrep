@@ -43,7 +43,6 @@ namespace ShoppingCart.ViewModels
 		}
 
 		private decimal _total;
-
 		public decimal Total
 		{
 			get => _total;
