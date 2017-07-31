@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using ShoppingCart.Api.Services;
 
 namespace ShoppingCart.Api
@@ -25,7 +27,13 @@ namespace ShoppingCart.Api
 		public void ConfigureServices(IServiceCollection services)
 		{
 			// Add framework services.
-			services.AddMvc();
+			services
+				.AddMvc()
+				.AddJsonOptions(options =>
+				{
+					options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+					options.SerializerSettings.Converters.Add(new StringEnumConverter());
+				});
 
 			services.AddSingleton<IProductsService, ProductsService>();
 		}

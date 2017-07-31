@@ -10,6 +10,28 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         >
     <Grid>
-        <TextBlock Text="{Binding Message}" FontSize="36" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Button Grid.Column="0" Grid.Row="0" Content="Refresh" Command="{Binding RefreshProducts}" />
+        <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Products}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding By}" />
+                        <TextBlock Text="{Binding Price, StringFormat={}{0:C}}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Grid.Column="0" Grid.Row="2" Content="Add to Cart" Command="{Binding AddToCart}" />
     </Grid>
 </Window>

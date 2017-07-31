@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Practices.Unity;
 using Prism.Mvvm;
+using ShoppingCart.Services;
 
 namespace ShoppingCart
 {
@@ -13,8 +14,9 @@ namespace ShoppingCart
 		{
 			base.OnStartup(e);
 
-			//IUnityContainer container = new UnityContainer();
-			//ViewModelLocationProvider.SetDefaultViewModelFactory(type => container.Resolve(type));
+			IUnityContainer container = new UnityContainer();
+			container.RegisterInstance(new ProductsService());
+			ViewModelLocationProvider.SetDefaultViewModelFactory(type => container.Resolve(type));
 		}
 	}
 }
