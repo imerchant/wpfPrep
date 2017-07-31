@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using Microsoft.Practices.Unity;
+using Prism.Mvvm;
 
 namespace ShoppingCart
 {
@@ -13,5 +9,12 @@ namespace ShoppingCart
 	/// </summary>
 	public partial class App : Application
 	{
+		protected override void OnStartup(StartupEventArgs e)
+		{
+			base.OnStartup(e);
+
+			//IUnityContainer container = new UnityContainer();
+			//ViewModelLocationProvider.SetDefaultViewModelFactory(type => container.Resolve(type));
+		}
 	}
 }
