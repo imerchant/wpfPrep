@@ -3,28 +3,34 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ShoppingCart.Api.Models;
+using ShoppingCartModels;
 
 namespace ShoppingCart.Services
 {
-	public class ProductsService
+	public class ProductsService : IDisposable
 	{
-		public static JsonSerializerSettings Settings;
+		private readonly JsonSerializerSettings _settings;
+		private readonly HttpClient _client;
 
-		static ProductsService()
+		public ProductsService()
 		{
-			Settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+			_client = new HttpClient
+			{
+				BaseAddress = new Uri("http://localhost:53266")
+			};
+			_settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+
 		}
 
 		public async Task<ICollection<IProduct>> GetAll()
 		{
-			var client = new HttpClient
-			{
-				BaseAddress = new Uri("http://localhost:53266")
-			};
+			var response = await _client.GetStringAsync("api/products");
+			return JsonConvert.DeserializeObject<ICollection<IProduct>>(response, _settings);
+		}
 
-			var response = await client.GetStringAsync("api/products");
-			return JsonConvert.DeserializeObject<ICollection<IProduct>>(response, Settings);
+		public void Dispose()
+		{
+			_client?.Dispose();
 		}
 	}
 }

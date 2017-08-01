@@ -145,9 +145,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ShoppingCart.Api\ShoppingCart.Api.csproj">
-      <Project>{471CB58B-E4AB-410E-AC27-CE2E0E9CCAFB}</Project>
-      <Name>ShoppingCart.Api</Name>
+    <ProjectReference Include="..\ShoppingCartModels\ShoppingCartModels.csproj">
+      <Project>{091651cb-093d-4dfe-802f-ac65aee34e85}</Project>
+      <Name>ShoppingCartModels</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

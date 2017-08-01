@@ -2,8 +2,8 @@
 using System.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
-using ShoppingCart.Api.Models;
 using ShoppingCart.Services;
+using ShoppingCartModels;
 
 namespace ShoppingCart.ViewModels
 {
@@ -24,25 +24,19 @@ namespace ShoppingCart.ViewModels
 		public DelegateCommand ClearCart { get; }
 
 		private decimal _subtotal;
+
 		public decimal Subtotal
 		{
 			get => _subtotal;
 			set => SetProperty(ref _subtotal, value);
 		}
 
-		private decimal _tax = 0.0725m;
-		public decimal Tax
-		{
-			get => _tax;
-		}
+		public decimal Tax { get; } = 0.0725m;
 
-		private decimal _shipping = 10m;
-		public decimal Shipping
-		{
-			get => _shipping;
-		}
+		public decimal Shipping { get; } = 10m;
 
 		private decimal _total;
+
 		public decimal Total
 		{
 			get => _total;
@@ -110,38 +104,39 @@ namespace ShoppingCart.ViewModels
 			Subtotal = Cart.Sum(x => x.Total);
 			Total = Subtotal > 0.00m ? Subtotal * (1 + Tax) + Shipping : 0.00m;
 		}
+	}
 
-		public class CartItemViewModel : BindableBase
+	public class CartItemViewModel : BindableBase
+	{
+		public IProduct Product { get; }
+
+		private int _quantity;
+		public int Quantity
 		{
-			public IProduct Product { get; }
-
-			private int _quantity = 0;
-			public int Quantity
+			get => _quantity;
+			set
 			{
-				get => _quantity;
-				set
-				{
-					SetProperty(ref _quantity, value);
-					UpdateTotal();
-				}
-			}
-
-			private decimal _total;
-			public decimal Total
-			{
-				get => _total;
-				set => SetProperty(ref _total, value);
-			}
-
-			public CartItemViewModel(IProduct product)
-			{
-				Product = product;
-			}
-
-			private void UpdateTotal()
-			{
-				Total = Quantity * Product.Price;
+				SetProperty(ref _quantity, value);
+				UpdateTotal();
 			}
 		}
+
+		private decimal _total;
+		public decimal Total
+		{
+			get => _total;
+			set => SetProperty(ref _total, value);
+		}
+
+		public CartItemViewModel(IProduct product)
+		{
+			Product = product;
+		}
+
+		private void UpdateTotal()
+		{
+			Total = Quantity * Product.Price;
+		}
 	}
+
 }

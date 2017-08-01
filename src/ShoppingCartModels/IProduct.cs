@@ -1,4 +1,4 @@
-﻿namespace ShoppingCart.Api.Models
+﻿namespace ShoppingCartModels
 {
 	public interface IProduct
 	{

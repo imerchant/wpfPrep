@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ShoppingCart.Api.Models;
+using ShoppingCartModels;
 
 namespace ShoppingCart.Api.Services
 {

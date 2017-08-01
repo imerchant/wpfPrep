@@ -3,10 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vms="clr-namespace:ShoppingCart.ViewModels"
+        xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:ShoppingCart"
+        xmlns:models="clr-namespace:ShoppingCartModels;assembly=ShoppingCartModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="600"
-        xmlns:prism="http://prismlibrary.com/"
+        d:DataContext="{d:DesignInstance vms:MainWindowViewModel, IsDesignTimeCreatable=False}"
         prism:ViewModelLocator.AutoWireViewModel="True"
         >
     <Grid>
@@ -23,7 +26,7 @@
         <Button Grid.Column="0" Grid.Row="0" Content="Refresh" Command="{Binding RefreshProducts}" />
         <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Products}" x:Name="ProductsList">
             <ListBox.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="models:IProduct">
                     <StackPanel>
                         <TextBlock Text="{Binding Name}" />
                         <TextBlock Text="{Binding By}" />
@@ -35,9 +38,9 @@
         <Button Grid.Column="0" Grid.Row="2" Content="Add to Cart" Command="{Binding AddToCart}" CommandParameter="{Binding ElementName=ProductsList, Path=SelectedItem}" />
 
         <Button Grid.Column="1" Grid.Row="0" Content="Clear cart" Command="{Binding ClearCart}" />
-        <ListBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" ItemsSource="{Binding Cart}" x:Name="Cart">
+        <ListBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Cart}" x:Name="Cart">
             <ListBox.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="vms:CartItemViewModel">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Quantity, StringFormat=Qty: {0}}" />
