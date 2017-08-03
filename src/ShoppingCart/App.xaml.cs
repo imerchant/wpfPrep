@@ -16,6 +16,7 @@ namespace ShoppingCart
 
 			IUnityContainer container = new UnityContainer();
 			container.RegisterInstance(new ProductsService());
+			container.RegisterInstance(new ImageService());
 			ViewModelLocationProvider.SetDefaultViewModelFactory(type => container.Resolve(type));
 		}
 	}

@@ -19,7 +19,6 @@ namespace ShoppingCart.Services
 				BaseAddress = new Uri("http://localhost:53266")
 			};
 			_settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-
 		}
 
 		public async Task<ICollection<IProduct>> GetAll()

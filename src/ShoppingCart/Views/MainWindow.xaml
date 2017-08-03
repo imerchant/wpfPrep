@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:ShoppingCart"
         xmlns:models="clr-namespace:ShoppingCartModels;assembly=ShoppingCartModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="600"
+        Title="MainWindow" Height="500" Width="750"
         d:DataContext="{d:DesignInstance vms:MainWindowViewModel, IsDesignTimeCreatable=False}"
         prism:ViewModelLocator.AutoWireViewModel="True"
         >
@@ -29,13 +29,13 @@
         <Button Grid.Column="0" Grid.Row="0" Content="Refresh" Command="{Binding RefreshProducts}" />
         <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Products}" x:Name="ProductsList">
             <ListBox.ItemTemplate>
-                <DataTemplate DataType="models:IProduct">
+                <DataTemplate DataType="vms:ProductViewModel">
                     <DockPanel>
-                        <Image DockPanel.Dock="Left" Source="{Binding Path=ImageUrl, Converter={StaticResource imgFetcher}, IsAsync=True}" />
+                        <Image DockPanel.Dock="Left" Source="{Binding Path=ImageSource.Result}" />
                         <StackPanel Margin="5">
-                            <TextBlock Text="{Binding Name}" />
-                            <TextBlock Text="{Binding By}" />
-                            <TextBlock Text="{Binding Price, StringFormat={}{0:C}}" />
+                            <TextBlock Text="{Binding Product.Name}" />
+                            <TextBlock Text="{Binding Product.By}" />
+                            <TextBlock Text="{Binding Product.Price, StringFormat={}{0:C}}" />
                         </StackPanel>
                     </DockPanel>
                 </DataTemplate>
@@ -47,15 +47,22 @@
         <ListBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Cart}" x:Name="Cart">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="vms:CartItemViewModel">
-                    <StackPanel Orientation="Horizontal">
+                    <DataTemplate.Resources>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Margin" Value="5" />
+                        </Style>
+                    </DataTemplate.Resources>
+                    <DockPanel>
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Quantity, StringFormat=Qty: {0}}" />
                             <TextBlock Text="{Binding Product.Name}" />
                             <TextBlock Text="{Binding Product.By}" />
                             <TextBlock Text="{Binding Product.Price, StringFormat={}{0:C}}" />
                         </StackPanel>
-                        <TextBlock Text="{Binding Total, StringFormat={}{0:C}}" />
-                    </StackPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Vertical">
+                            <TextBlock Text="{Binding Quantity, StringFormat=Qty: {0}}" />
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding Total, StringFormat=Subtotal: {0:C}}" />
+                        </StackPanel>
+                    </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

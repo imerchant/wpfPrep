@@ -1,5 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using Nito.Mvvm;
 using Prism.Commands;
 using Prism.Mvvm;
 using ShoppingCart.Services;
@@ -10,21 +14,21 @@ namespace ShoppingCart.ViewModels
 	public class MainWindowViewModel : BindableBase
 	{
 		private readonly ProductsService _productsService;
+		private readonly ImageService _imageService;
 
-		public ObservableCollection<IProduct> Products { get; }
+		public ObservableCollection<ProductViewModel> Products { get; }
 
 		public ObservableCollection<CartItemViewModel> Cart { get; }
 
 		public DelegateCommand RefreshProducts { get; }
 
-		public DelegateCommand<IProduct> AddToCart { get; }
+		public DelegateCommand<ProductViewModel> AddToCart { get; }
 
 		public DelegateCommand<CartItemViewModel> RemoveFromCart { get; }
 
 		public DelegateCommand ClearCart { get; }
 
 		private decimal _subtotal;
-
 		public decimal Subtotal
 		{
 			get => _subtotal;
@@ -36,21 +40,21 @@ namespace ShoppingCart.ViewModels
 		public decimal Shipping { get; } = 10m;
 
 		private decimal _total;
-
 		public decimal Total
 		{
 			get => _total;
 			set => SetProperty(ref _total, value);
 		}
 
-		public MainWindowViewModel(ProductsService productsService)
+		public MainWindowViewModel(ProductsService productsService, ImageService imageService)
 		{
 			_productsService = productsService;
+			_imageService = imageService;
 
-			Products = new ObservableCollection<IProduct>();
+			Products = new ObservableCollection<ProductViewModel>();
 			Cart = new ObservableCollection<CartItemViewModel>();
 			RefreshProducts = new DelegateCommand(FetchProducts);
-			AddToCart = new DelegateCommand<IProduct>(AddProductToCart);
+			AddToCart = new DelegateCommand<ProductViewModel>(AddProductToCart);
 			RemoveFromCart = new DelegateCommand<CartItemViewModel>(RemoveProductFromCart);
 			ClearCart = new DelegateCommand(RemoveAllFromCart);
 
@@ -61,18 +65,18 @@ namespace ShoppingCart.ViewModels
 		{
 			Products.Clear();
 			var products = await _productsService.GetAll();
-			Products.AddRange(products);
+			Products.AddRange(products.Select(product => new ProductViewModel(product, p => _imageService.Get(p.ImageUrl))));
 		}
 
-		private void AddProductToCart(IProduct product)
+		private void AddProductToCart(ProductViewModel product)
 		{
 			if (product == null)
 				return;
 
-			var cartItem = Cart.FirstOrDefault(x => x.Product.Id == product.Id);
+			var cartItem = Cart.FirstOrDefault(x => x.Product.Id == product.Product.Id);
 			if (cartItem == null)
 			{
-				cartItem = new CartItemViewModel(product);
+				cartItem = new CartItemViewModel(product.Product);
 				Cart.Add(cartItem);
 			}
 
@@ -103,6 +107,19 @@ namespace ShoppingCart.ViewModels
 		{
 			Subtotal = Cart.Sum(x => x.Total);
 			Total = Subtotal > 0.00m ? Subtotal * (1 + Tax) + Shipping : 0.00m;
+		}
+	}
+
+	public class ProductViewModel : BindableBase
+	{
+		public NotifyTask<BitmapImage> ImageSource { get; }
+
+		public IProduct Product { get; }
+
+		public ProductViewModel(IProduct product, Func<IProduct, Task<BitmapImage>> imgFetcher)
+		{
+			Product = product;
+			ImageSource = NotifyTask.Create(imgFetcher(Product));
 		}
 	}
 
