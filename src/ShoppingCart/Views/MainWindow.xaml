@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:ShoppingCart"
         xmlns:models="clr-namespace:ShoppingCartModels;assembly=ShoppingCartModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="600"
+        Title="MainWindow" Height="500" Width="750"
         d:DataContext="{d:DesignInstance vms:MainWindowViewModel, IsDesignTimeCreatable=False}"
         prism:ViewModelLocator.AutoWireViewModel="True"
         >
@@ -47,15 +47,22 @@
         <ListBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Cart}" x:Name="Cart">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="vms:CartItemViewModel">
-                    <StackPanel Orientation="Horizontal">
+                    <DataTemplate.Resources>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Margin" Value="5" />
+                        </Style>
+                    </DataTemplate.Resources>
+                    <DockPanel>
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Quantity, StringFormat=Qty: {0}}" />
                             <TextBlock Text="{Binding Product.Name}" />
                             <TextBlock Text="{Binding Product.By}" />
                             <TextBlock Text="{Binding Product.Price, StringFormat={}{0:C}}" />
                         </StackPanel>
-                        <TextBlock Text="{Binding Total, StringFormat={}{0:C}}" />
-                    </StackPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Vertical">
+                            <TextBlock Text="{Binding Quantity, StringFormat=Qty: {0}}" />
+                            <TextBlock Text="{Binding Total, StringFormat=Subtotal: {0:C}}" />
+                        </StackPanel>
+                    </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
